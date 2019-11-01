@@ -26,7 +26,7 @@ class FireHazardStatus(Resource):
                                     host=os.getenv('FIREDATA_PGBOUNCER_SERVICE_HOST'),
                                     password=os.getenv('db_password'))
         cur = conn.cursor()
-        cur.execute("""select gid, ST_AsText(the_geom) as geom from assessor_parcels LIMIT 3""")
+        cur.execute("""select gid, ST_AsText(geom) as geom from assessor_parcels LIMIT 3""")
 
         rows = cur.fetchall()
         result_string = "<h2>Here are your results: </h2>"
