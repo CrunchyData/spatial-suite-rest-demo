@@ -21,6 +21,7 @@ class FireHazardStatus(Resource):
             conn = psycopg2.connect(database='firedata', user=os.environ.get('db_user'),
                                     host=os.environ.get('FIREDATA_PGBOUNCER_SERVICE_HOST'), password=os.environ.get('db_password'))
         except:
+            print( os.environ.get('FIREDATA_PGBOUNCER_SERVICE_HOST') + "  " + os.environ.get('db_password'))
 
         cur = conn.cursor()
         cur.execute("""select gid, ST_AsText(the_geom) as geom from assessor_parcels LIMIT 3""")
@@ -35,6 +36,5 @@ class FireHazardStatus(Resource):
 
         return result_string
 
-api.add_resource(FireHazardStatus, '/parcel/firehazard/<int:parcelid>', '/parcel/firehazard/')
 
-        
+api.add_resource(FireHazardStatus, '/parcel/firehazard/<int:parcelid>', '/parcel/firehazard/')
