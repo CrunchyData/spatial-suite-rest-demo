@@ -7,31 +7,41 @@ from flask import Flask, request
 
 app = Flask(__name__)
 
+def get_connection():
+    conn = psycopg2.connect(database='firedata', user=os.getenv('db_username'),
+                            host=os.getenv('FIREDATA_PGBOUNCER_SERVICE_HOST'),
+                            password=os.getenv('db_password'))
+
+    return conn
+
 
 @app.route('/')
 def index():
     return "Hello World"
 
 
-@app.route('/parcel/firehazard/<int:parcelid>')
-def firehazard(parcelid):
-    conn = psycopg2.connect(database='firedata', user=os.getenv('db_username'),
-                            host=os.getenv('FIREDATA_PGBOUNCER_SERVICE_HOST'),
-                            password=os.getenv('db_password'))
+@app.route('/parcel/firehazard/<int:parcelid>', methods=['GET'])
+def get_firehazard(parcelid):
+    conn = get_connection()
     cur = conn.cursor()
-    if request.method == 'GET':
-        sql_string = "select gid, firehazard from assessor_parcels where gid = '%s'" % (parcelid)
-        cur.execute(sql_string)
+    sql_string = "select gid, firehazard from assessor_parcels where gid = '%s'" % (parcelid)
+    cur.execute(sql_string)
 
-        rows = cur.fetchall()
-        for row in rows:
-            result = { "parcelid": row[0], "firehazard": str(row[1])}
+    rows = cur.fetchall()
+    for row in rows:
+        result = { "parcelid": row[0], "firehazard": str(row[1])}
 
-        return result
-    elif request.method == 'PUT':
-        return 'json'
-
-    return "We Weren't Supposed To Be Called The Way You Did"
+    return result
 
     cur.close()
     conn.close()
+
+@app.route('/parcel/firehazard/', methods=['PUT'])
+def update_firehazard():
+
+    #get the JSON payload
+    json_response = request.get_json()
+    parcelid = json_response['parcelid']
+    new_firehazard = json_response['firehazard']
+    print(parcelid + " :: " + new_firehazard)
+    return (parcelid + " :: " + new_firehazard)
