@@ -16,10 +16,6 @@ class HelloWorld(Resource):
 api.add_resource(HelloWorld, '/')
 
 class FireHazardStatus(Resource):
-    def get(Resource):
-        return "You got some hazard dude"
-
-api.add_resource(FireHazardStatus, '/parcel/firehazard/<int:parcelid>', '/parcel/firehazard/')
     def get(self, parcelid):
         try:
             conn = psycopg2.connect(database='firedata', user=os.environ.get('db_user'),
@@ -38,4 +34,7 @@ api.add_resource(FireHazardStatus, '/parcel/firehazard/<int:parcelid>', '/parcel
         conn.close()
 
         return result_string
+
+api.add_resource(FireHazardStatus, '/parcel/firehazard/<int:parcelid>', '/parcel/firehazard/')
+
         
