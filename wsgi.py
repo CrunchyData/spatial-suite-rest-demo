@@ -20,7 +20,7 @@ def firehazard(parcelid):
                             password=os.getenv('db_password'))
     cur = conn.cursor()
     if request.method == 'GET':
-        sql_string = "select gid, firehazard from assessor_parcels where gid = " + parcelid
+        sql_string = "select gid, firehazard from assessor_parcels where gid = '%s'" % (parcelid)
         cur.execute(sql_string)
 
         rows = cur.fetchall()
