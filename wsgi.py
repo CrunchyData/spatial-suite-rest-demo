@@ -21,6 +21,7 @@ api.add_resource(HelloWorld, '/')
 
 class FireHazardStatus(Resource):
     def get(self, parcelid):
+        print(os.environ.get('db_user') + " " + os.environ.get('FIREDATA_PGBOUNCER_SERVICE_HOST') + " " + os.environ.get('db_password'))
         conn = psycopg2.connect(database='firedata', user=os.environ.get('db_user'),
                                     host=os.environ.get('FIREDATA_PGBOUNCER_SERVICE_HOST'),
                                     password=os.environ.get('db_password'))
@@ -38,4 +39,4 @@ class FireHazardStatus(Resource):
         return result_string
 
 
-api.add_resource(FireHazardStatus, '/parcel/firehazard/<int:parcelid>', '/parcel/firehazard/')
+api.add_resource(FireHazardStatus, '/parcel/firehazard/', '/parcel/firehazard/<int:parcelid>')
