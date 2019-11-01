@@ -1,3 +1,5 @@
 mod_wsgi==4.6.8
+psycopg2==2.8.4
+
 Flask==1.1.1
-Flask-RESTful=0.3.7
+Flask-RESTful==0.3.7
