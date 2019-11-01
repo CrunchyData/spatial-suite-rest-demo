@@ -9,19 +9,25 @@ from flask import Flask
 app = Flask(__name__)
 api = Api(app)
 
+
 # Making sure everything works
 class HelloWorld(Resource):
     def get(self):
         return "Hello World"
+
+
 api.add_resource(HelloWorld, '/')
+
 
 class FireHazardStatus(Resource):
     def get(self, parcelid):
+        conn = ''
         try:
             conn = psycopg2.connect(database='firedata', user=os.environ.get('db_user'),
-                                    host=os.environ.get('FIREDATA_PGBOUNCER_SERVICE_HOST'), password=os.environ.get('db_password'))
+                                    host=os.environ.get('FIREDATA_PGBOUNCER_SERVICE_HOST'),
+                                    password=os.environ.get('db_password'))
         except:
-            print( os.environ.get('FIREDATA_PGBOUNCER_SERVICE_HOST') + "  " + os.environ.get('db_password'))
+            print(os.environ.get('FIREDATA_PGBOUNCER_SERVICE_HOST') + "  " + os.environ.get('db_password'))
 
         cur = conn.cursor()
         cur.execute("""select gid, ST_AsText(the_geom) as geom from assessor_parcels LIMIT 3""")
