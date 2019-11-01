@@ -21,10 +21,10 @@ api.add_resource(HelloWorld, '/')
 
 class FireHazardStatus(Resource):
     def get(self, parcelid):
-        print(os.environ.get('db_user') + " " + os.environ.get('FIREDATA_PGBOUNCER_SERVICE_HOST') + " " + os.environ.get('db_password'))
-        conn = psycopg2.connect(database='firedata', user=os.environ.get('db_user'),
-                                    host=os.environ.get('FIREDATA_PGBOUNCER_SERVICE_HOST'),
-                                    password=os.environ.get('db_password'))
+        #print(os.environ.get('db_user') + " " + os.environ.get('FIREDATA_PGBOUNCER_SERVICE_HOST') + " " + os.environ.get('db_password'))
+        conn = psycopg2.connect(database='firedata', user=os.getenv('db_user'),
+                                    host=os.getenv('FIREDATA_PGBOUNCER_SERVICE_HOST'),
+                                    password=os.getenv('db_password'))
         cur = conn.cursor()
         cur.execute("""select gid, ST_AsText(the_geom) as geom from assessor_parcels LIMIT 3""")
 
