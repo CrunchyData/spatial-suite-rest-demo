@@ -43,5 +43,5 @@ def update_firehazard():
     json_response = request.get_json()
     parcelid = json_response['parcelid']
     new_firehazard = json_response['firehazard']
-    print(parcelid + " :: " + new_firehazard)
-    return (parcelid + " :: " + new_firehazard)
+    result =  "%s :: %s" % (parcelid, new_firehazard)
+    return result
