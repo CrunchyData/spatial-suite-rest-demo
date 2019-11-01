@@ -43,5 +43,13 @@ def update_firehazard():
     json_response = request.get_json()
     parcelid = json_response['parcelid']
     new_firehazard = json_response['firehazard']
-    result =  "%s :: %s" % (parcelid, new_firehazard)
-    return result
+
+
+    sql = """ update assessor_parcels SET firehazard =  %s WHERE gid  = %s"""
+    conn = get_connection()
+    cur = conn.cursor()
+    cur.execute(sql, (new_firehazard, parcelid))
+    conn.commit()
+    cur.close()
+    conn.close()
+    return {"result": "success"}
