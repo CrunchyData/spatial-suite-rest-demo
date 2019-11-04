@@ -1,7 +1,7 @@
 import os
 import json
 import psycopg2
-from flask import Flask, request
+from flask import Flask, request, jsonify
 
 # Setup the Flask application.
 
@@ -38,7 +38,7 @@ def notify_function():
         result = {"parcelid": str(row[1]), "geom": row[1]}
         results.append(result)
 
-    return results
+    return jsonify(results)
 
 
 @app.route('/parcel/firehazard/<int:parcelid>', methods=['GET', 'PUT'])
