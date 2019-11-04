@@ -1,11 +1,11 @@
-#APIs
+# APIs
 
+These are very brittle service right now - there is no error checking or even exception handling
 
 ## Getting and Updating a firehazard value on a parcel
 
-This is a very brittle service right now - there is no error checking or even exception handling
+URL:  /parcel/firehazard/<id>
 
-URL: /parcel/firehazard/<id>
 Our URL right now:  http://rest-services-scfire.openshift-pousty-apps.gce-containers.crunchydata.com/parcel/firehazard/<id>
 
 ### Getting a value for a parcel
@@ -35,3 +35,14 @@ Our URL right now:  http://rest-services-scfire.openshift-pousty-apps.gce-contai
     Response on anything else:
     an error as of now
     
+    
+## Generating a Fire notify list
+
+URL:  /notify/parcel-and-distance?parcelid=<parcelid>&dist=<integer distance in meters>
+
+Response on success:
+A JSON Array of Parcel Objects
+A Parcel Object is a JSON Object, containing:
+* parcelid
+* any attributes we want to put in the table
+* a WKT representation of the polygon geometry in EPSG 3857  

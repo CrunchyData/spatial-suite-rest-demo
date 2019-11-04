@@ -19,13 +19,34 @@ def get_connection():
 def index():
     return "Hello World"
 
+@app.route('/notify/parcel-and-distance', methods=['GET'])
+def notify_function():
+
+    #TODO should test for parameter passing
+    parcelid  = request.args.get('parcelid', type=int)
+    distance = request.args.get('dist', type=int)
+
+    conn = get_connection()
+    cur = conn.cursor()
+    sql_string = "SELECT ST_AsTest(ST_Transform(a.geom, 3857), 6), a.gid FROM parcels a JOIN parcels b ON ST_DWithin(a.geom, b.geom, {radius}) WHERE b.id = {id}".format(id=parcelid, radius=distance)
+    cur.execute(sql_string)
+    rows = cur.fetchall()
+
+    results = []
+
+    for row in rows:
+        result = {"parcelid": str(row[1]), "geom": row[1]}
+        results.append(result)
+
+    return results
+
 
 @app.route('/parcel/firehazard/<int:parcelid>', methods=['GET', 'PUT'])
 def get_firehazard(parcelid):
     conn = get_connection()
     cur = conn.cursor()
     if request.method == 'GET':
-        sql_string = "select gid, firehazard from assessor_parcels where gid = '%s'" % (parcelid)
+        sql_string = "select gid, firehazard from assessor_parcels where gid =  {id}".format(id=parcelid)
         cur.execute(sql_string)
 
         rows = cur.fetchall()
@@ -50,20 +71,3 @@ def get_firehazard(parcelid):
     cur.close()
     conn.close()
 
-# @app.route('/parcel/firehazard/', methods=['PUT'])
-# def update_firehazard():
-#
-#     #get the JSON payload
-#     json_response = request.get_json()
-#     parcelid = json_response['parcelid']
-#     new_firehazard = json_response['firehazard']
-#
-#
-#     sql = """ update assessor_parcels SET firehazard =  %s WHERE gid  = %s"""
-#     conn = get_connection()
-#     cur = conn.cursor()
-#     cur.execute(sql, (new_firehazard, parcelid))
-#     conn.commit()
-#     cur.close()
-#     conn.close()
-#     return {"result": "success"}
