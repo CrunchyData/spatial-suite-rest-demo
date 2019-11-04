@@ -28,7 +28,7 @@ def notify_function():
 
     conn = get_connection()
     cur = conn.cursor()
-    sql_string = "SELECT st_astext( ST_Transform(a.geom, 4326)), a.gid, (a.sitnumber || ' ' ||  a.sitstreet || ', ' ||  a.sitcity || ' ' || a.sitzip) as address, acres " \
+    sql_string = "SELECT st_astext( ST_Transform(a.geom, 4326)), a.gid, (a.sitnumber || ' ' ||  a.sitstreet || ', ' ||  a.sitcity || ' ' || a.sitzip) as address, a.acres " \
                  "FROM assessor_parcels a JOIN assessor_parcels b ON ST_DWithin(a.geom, b.geom, {radius}) WHERE b.gid = {id}".format(id=parcelid, radius=distance)
     cur.execute(sql_string)
     rows = cur.fetchall()
