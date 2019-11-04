@@ -35,7 +35,7 @@ def notify_function():
     results = []
 
     for row in rows:
-        result = {"parcelid": str(row[1]), "geom": row[1]}
+        result = {"parcelid": str(row[1]), "geom": row[0]}
         results.append(result)
 
     return jsonify(results)
