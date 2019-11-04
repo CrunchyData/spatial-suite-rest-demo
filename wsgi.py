@@ -28,14 +28,15 @@ def notify_function():
 
     conn = get_connection()
     cur = conn.cursor()
-    sql_string = "SELECT st_astext( ST_Transform(a.geom, 4326)), a.gid FROM assessor_parcels a JOIN assessor_parcels b ON ST_DWithin(a.geom, b.geom, {radius}) WHERE b.gid = {id}".format(id=parcelid, radius=distance)
+    sql_string = "SELECT st_astext( ST_Transform(a.geom, 4326)), a.gid (sitnumber || ' ' ||  sitstreet || ', ' ||  sitcity || ' ' || sitzip) as address, acres " \
+                 "FROM assessor_parcels a JOIN assessor_parcels b ON ST_DWithin(a.geom, b.geom, {radius}) WHERE b.gid = {id}".format(id=parcelid, radius=distance)
     cur.execute(sql_string)
     rows = cur.fetchall()
 
     results = []
 
     for row in rows:
-        result = {"parcelid": str(row[1]), "geom": row[0]}
+        result = {"parcelid": str(row[1]), "address": row[2], "acres": row[3], "geom": row[0]}
         results.append(result)
 
     return jsonify(results)
