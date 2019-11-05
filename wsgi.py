@@ -14,6 +14,12 @@ def get_connection():
 
     return conn
 
+# This connection is read only so let's get the data from the replica
+def get_tiger_connection():
+    conn = psycopg2.connect(database='tiger', user=os.getenv('db_username'),
+                            host=os.getenv('FIREDATA_REPLICA_SERVICE_HOST'),
+                            password=os.getenv('db_password'))
+
 
 @app.route('/')
 def index():
