@@ -38,7 +38,7 @@ def geocode_function(address):
     cur = conn.cursor()
 
     #do the geocode on the address
-    geocode_sql = "select ST_X(g.geomout) as lon, ST_Y(g.geomout) as lat, g.geomout as wkb from tiger.geocode({add}) as g".format(add=address)
+    geocode_sql = "select ST_X(g.geomout) as lon, ST_Y(g.geomout) as lat, g.geomout as wkb from tiger.geocode('{add}') as g".format(add=address)
     tiger_cur.execute(geocode_sql)
     rows = tiger_cur.fetchall()
     result['lon'] = rows[0]
