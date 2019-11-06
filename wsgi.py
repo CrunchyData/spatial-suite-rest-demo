@@ -42,11 +42,11 @@ def geocode_function(address):
     tiger_cur.execute(geocode_sql)
     rows = tiger_cur.fetchall()
     print(rows)
-    result['lon'] = rows[0]
-    result['lat'] = rows[1]
+    result['lon'] = rows[0][0]
+    result['lat'] = rows[0][1]
 
     #then take the wkb and use it to get the parcel id
-    parcel_sql = "select gid from assessor_parcels where st_intersects( geom, st_transform('{geom}'::geometry, 2227))".format(geom=rows[0])
+    parcel_sql = "select gid from assessor_parcels where st_intersects( geom, st_transform('{geom}'::geometry, 2227))".format(geom=rows[0][2])
     cur.execute(parcel_sql)
     parcel_rows = cur.fetchall
     result['parcelid'] = parcel_rows[0]
