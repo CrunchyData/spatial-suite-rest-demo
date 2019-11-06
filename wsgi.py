@@ -48,8 +48,8 @@ def geocode_function(address):
     #then take the wkb and use it to get the parcel id
     parcel_sql = "select gid from assessor_parcels where st_intersects( geom, st_transform('{geom}'::geometry, 2227))".format(geom=rows[0][2])
     cur.execute(parcel_sql)
-    parcel_rows = cur.fetchall
-    result['parcelid'] = parcel_rows[0]
+    parcel_rows = cur.fetchall()
+    result['parcelid'] = parcel_rows[0][0]
 
     cur.close()
     tiger_cur.close()
