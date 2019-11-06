@@ -20,6 +20,8 @@ def get_tiger_connection():
                             host=os.getenv('FIREDATA_REPLICA_SERVICE_HOST'),
                             password=os.getenv('db_password'))
 
+    return conn
+
 
 @app.route('/')
 def index():
