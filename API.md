@@ -46,3 +46,22 @@ A Parcel Object is a JSON Object, containing:
 * parcelid
 * any attributes we want to put in the table
 * a WKT representation of the polygon geometry in EPSG 3857  
+
+## Geocoding an Address
+
+Just tack a string for a fully qualified address on the end of 
+URL/geocode/<address>
+
+http://rest-services-scfire.openshift-pousty-apps.gce-containers.crunchydata.com/geocode/400%20glen%20canyon%20road,%20santa%20cruz,%20ca,%2095060
+
+response:
+The coords are in 4326 and the parcelid is the parcel identifier for the 
+closest parcel to that lat (y), lon (x)
+
+```
+{
+  "lat": 37.007599341936,
+  "lon": -122.009281462818,
+  "parcelid": 70193
+}
+```

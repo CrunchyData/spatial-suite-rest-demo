@@ -22,10 +22,44 @@ def get_tiger_connection():
                             host=os.getenv('FIREDATA_REPLICA_SERVICE_HOST'),
                             password=os.getenv('db_password'))
 
+    return conn
+
 
 @app.route('/')
 def index():
     return "Hello World"
+
+@app.route('/geocode/<string:address>', methods=['GET'])
+def geocode_function(address):
+    result = {}
+
+    tiger_conn = get_tiger_connection()
+    tiger_cur = tiger_conn.cursor()
+
+    conn = get_connection()
+    cur = conn.cursor()
+
+    #do the geocode on the address
+    geocode_sql = "select ST_X(g.geomout) as lon, ST_Y(g.geomout) as lat, g.geomout as wkb from tiger.geocode('{add}') as g".format(add=address)
+    tiger_cur.execute(geocode_sql)
+    rows = tiger_cur.fetchall()
+    print(rows)
+    result['lon'] = rows[0][0]
+    result['lat'] = rows[0][1]
+
+    #then take the wkb and use it to get the parcel id
+    parcel_sql = "select gid from assessor_parcels where st_intersects( geom, st_transform('{geom}'::geometry, 2227))".format(geom=rows[0][2])
+    cur.execute(parcel_sql)
+    parcel_rows = cur.fetchall()
+    result['parcelid'] = parcel_rows[0][0]
+
+    cur.close()
+    tiger_cur.close()
+    conn.close()
+    tiger_conn.close()
+
+    return result
+
 
 @app.route('/notify/parcel-and-distance', methods=['GET'])
 def notify_function():
@@ -62,6 +96,8 @@ def get_firehazard(parcelid):
         for row in rows:
             result = { "parcelid": row[0], "firehazard": str(row[1])}
 
+        cur.close()
+        conn.close()
         return result
 
     elif request.method == 'PUT':
@@ -74,6 +110,8 @@ def get_firehazard(parcelid):
         cur = conn.cursor()
         cur.execute(sql, (new_firehazard, parcelid))
         conn.commit()
+        cur.close()
+        conn.close()
         return {"result": "success"}
 
 
