@@ -2,10 +2,12 @@ import os
 import json
 import psycopg2
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 
 # Setup the Flask application.
 
 app = Flask(__name__)
+CORS(app)
 
 def get_connection():
     conn = psycopg2.connect(database='firedata', user=os.getenv('db_username'),
