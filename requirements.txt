@@ -2,4 +2,4 @@ mod_wsgi==4.6.8
 psycopg2==2.8.4
 
 Flask==1.1.1
-flask-cors==3.0.8
+flask-cors==3.0.9
