@@ -1,4 +1,4 @@
-mod_wsgi==4.6.8
+mod_wsgi==4.9.3
 psycopg2==2.8.4
 
 Flask==1.1.1
